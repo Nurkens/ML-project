@@ -4,7 +4,6 @@ import numpy as np
 
 app = Flask(__name__)
 
-# Загрузка модели и scaler
 model = joblib.load("heart_disease_model.joblib")
 scaler = joblib.load("scaler.joblib")
 
@@ -15,7 +14,6 @@ def index():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        # Получение значений из формы
         features = [
             float(request.form["age"]),
             float(request.form["sex"]),
@@ -32,11 +30,10 @@ def predict():
             float(request.form["thal"])
         ]
 
-        # Преобразуем в массив и масштабируем
         data = np.array([features])
         data_scaled = scaler.transform(data)
 
-        # Предсказание
+        
         prediction = model.predict(data_scaled)[0]
 
         result = "✅ Риск сердечного заболевания обнаружен" if prediction == 1 else "✅ Риск сердечного заболевания не обнаружен"
@@ -46,4 +43,4 @@ def predict():
         return render_template("index.html", result=f"⚠️ Ошибка: {e}")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000)
