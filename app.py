@@ -5,7 +5,7 @@ import numpy as np
 app = Flask(__name__)
 
 # Загрузка модели и scaler
-model = joblib.load("diabetes_model.joblib")
+model = joblib.load("heart_disease_model.joblib")
 scaler = joblib.load("scaler.joblib")
 
 @app.route("/")
@@ -17,14 +17,19 @@ def predict():
     try:
         # Получение значений из формы
         features = [
-            float(request.form["pregnancies"]),
-            float(request.form["glucose"]),
-            float(request.form["blood_pressure"]),
-            float(request.form["skin_thickness"]),
-            float(request.form["insulin"]),
-            float(request.form["bmi"]),
-            float(request.form["diabetes_pedigree_function"]),
-            float(request.form["age"])
+            float(request.form["age"]),
+            float(request.form["sex"]),
+            float(request.form["cp"]),
+            float(request.form["trestbps"]),
+            float(request.form["chol"]),
+            float(request.form["fbs"]),
+            float(request.form["restecg"]),
+            float(request.form["thalach"]),
+            float(request.form["exang"]),
+            float(request.form["oldpeak"]),
+            float(request.form["slope"]),
+            float(request.form["ca"]),
+            float(request.form["thal"])
         ]
 
         # Преобразуем в массив и масштабируем
@@ -34,7 +39,7 @@ def predict():
         # Предсказание
         prediction = model.predict(data_scaled)[0]
 
-        result = "✅ Диабет обнаружен" if prediction == 1 else "✅ Диабет не обнаружен"
+        result = "✅ Риск сердечного заболевания обнаружен" if prediction == 1 else "✅ Риск сердечного заболевания не обнаружен"
         return render_template("index.html", result=result)
 
     except Exception as e:

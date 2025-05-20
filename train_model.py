@@ -6,18 +6,18 @@ from sklearn.metrics import classification_report, roc_auc_score
 import joblib
 
 # 1. Загрузка данных
-df = pd.read_csv('data/diabetes.csv')
+df = pd.read_csv('data/heart.csv')
 
-# 2. Проверка пропусков только в нужных столбцах
-cols_with_missing = ['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']
-for col in cols_with_missing:
-    df[col] = df[col].replace(0, pd.NA)
-    median = df[col].median()
-    df[col] = df[col].fillna(median)
+# 2. Проверка пропусков (пример для heart disease dataset)
+# Здесь можно добавить обработку пропущенных значений, если они есть в вашем датасете
+# cols_with_missing = ['age', 'trestbps', 'chol']  # пример
+# for col in cols_with_missing:
+#     median = df[col].median()
+#     df[col] = df[col].fillna(median)
 
 # 3. Разделение данных
-X = df.drop('Outcome', axis=1)
-y = df['Outcome']
+X = df.drop('target', axis=1)  # предполагаем, что целевая переменная называется 'target'
+y = df['target']
 
 # 4. Масштабирование
 scaler = StandardScaler()
@@ -43,7 +43,7 @@ roc_auc = roc_auc_score(y_test, y_prob)
 print(f"ROC-AUC: {roc_auc:.3f}")
 
 # 8. Сохранение модели и scaler
-joblib.dump(model, 'diabetes_model.joblib')
+joblib.dump(model, 'heart_disease_model.joblib')
 joblib.dump(scaler, 'scaler.joblib')
 
 print("Модель и scaler сохранены.")
